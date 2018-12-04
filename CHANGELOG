@@ -1,0 +1,5 @@
+**Changelog version: 1.2.1**
+  * Initial source code release copied http://pistegamez.net/PK2
+  * Added icon in format (PNG) size 330 pixels
+  * Added the BSD-2-Clauses license file
+  * Functions Removed: Level Editor, Sprite Creator
