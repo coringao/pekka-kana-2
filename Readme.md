@@ -25,10 +25,10 @@ developer link [PK2Source.zip](http://pistegamez.net/PK2) and modified for
 better operation on the GNU/Linux distributions.
 
 This package contains the source codes for the game **Pekka Kana 2**, written
-by Janne Kivilahti.
+by **Janne Kivilahti**.
 
-The game and it's code are copyrighted by Janne Kivilahti, but you can modify
-and use the code freely as long as the original author is mentioned.
+The game and it's code are copyrighted by **Janne Kivilahti**, but you can
+modify and use the code freely as long as the original author is mentioned.
 
 **Compiling**
 -------------
@@ -39,11 +39,11 @@ the system. To get them just run the following command on the terminal:
 
     # apt install libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev make
 
-Run the "make" command inside the "Pekka Kana 2" directory.
+Run the "**make**" command inside the "**Pekka Kana 2**" directory.
 
     $ make
 
-The PK2 binary will be in "bin/" directory.
+The PK2 binary will be in "**bin/**" directory.
 
     $ ./pk2
 
