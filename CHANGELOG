@@ -8,3 +8,5 @@
   * Main code changed to interact with the engine
   * Fixed file paths, deleted some commented lines
   * Fixed bugs and removed unused files
+  * Defined the SDL2 library in CFLAGS and LDFLAGS
+  * Fixed: Sprintf Buffer Overflow Detection
