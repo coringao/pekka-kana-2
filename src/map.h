@@ -12,8 +12,8 @@
 
 /* INCLUDES -----------------------------------------------------------------*/
 
-#include "types.h"
-#include "platform.h"
+#include "PistePlatform.h"
+#include "PisteTypes.h"
 #include <string.h>
 
 /*---------------------------------------------------------------------------*/
