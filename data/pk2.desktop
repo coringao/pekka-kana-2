@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Pekka Kana 2
+Comment=2D Oldschool platform game where you control a rooster named Pekka
+Exec=pk2
+Keywords=game;adventure;action;platforms;
+Terminal=false
+Type=Application
+Icon=pk2
+Categories=Game;AdventureGame;ActionGame;
