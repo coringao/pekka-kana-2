@@ -1,23 +1,23 @@
-/* INCLUDES ----------------------------------------------------------------------------------*/
+// Pekka Kana 2 by Janne Kivilahti from Piste Gamez (2003-2007)
+// https://pistegamez.net/game_pk2.html
+//
+// The public release, rewritten and continued by Carlos Donizete Froes
+// is governed by a BSD-2-clause license.
+//
 
-#include <windows.h> 
-#include <windowsx.h> 
-#include <mmsystem.h>
+/* INCLUDES -----------------------------------------------------------------*/
+
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <direct.h>
-#include <io.h>
-#include <fstream.h>
-#include <iostream.h>
 #include <string.h>
 #include "PisteLog.h"
 
-/* VARIABLES ---------------------------------------------------------------------------------*/
+/* VARIABLES ----------------------------------------------------------------*/
 
 bool	kirjoita_pisteloki = false;
 
-/* METHODS ----------------------------------------------------------------------------------*/
+/* METHODS ------------------------------------------------------------------*/
 
 void PisteLog_Salli_Kirjoitus() {
 		kirjoita_pisteloki = true;	
@@ -42,7 +42,7 @@ int PisteLog_Kirjoita(char *viesti) {
 
 		strcpy(mjono,viesti);
 
-		fwrite(mjono,		sizeof(CHAR),	strlen(mjono),  tiedosto);
+		fwrite(mjono,	sizeof(char),	strlen(mjono),  tiedosto);
 
 		fclose(tiedosto);
 	}

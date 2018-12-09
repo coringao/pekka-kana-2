@@ -1,51 +1,30 @@
+// Pekka Kana 2 by Janne Kivilahti from Piste Gamez (2003-2007)
+// https://pistegamez.net/game_pk2.html
+//
+// The public release, rewritten and continued by Carlos Donizete Froes
+// is governed by a BSD-2-clause license.
+//
+
+/* DEFINITIONS --------------------------------------------------------------*/
+
 #ifndef P_SOUND
 #define P_SOUND
 
-/* INCLUDES ----------------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 
-#define DIRECTSOUND_VERSION 0x0700
-#include "D:\DXSDK\Include\dsound.h" // MUISTA KORJATA POLKU OIKEIN!!!!
-#include <windows.h> 
+int PisteSound_Start();
+int PisteSound_Update();
+int PisteSound_End();
 
-/* DEFINES -----------------------------------------------------------------------------------*/
+int PisteSound_LoadSFX(char* filename);
+void PisteSound_PlaySFX(int index);
+void PisteSound_PlaySFX(int index, int volume, int panoramic, int freq);
+void PisteSound_SetSFXVolume(int volume);
+int PisteSound_FreeSFX(int index);
+void PisteSound_ResetSFX();
 
-#define		PS_VIRHE  -1
-
-#define SOUND_NULL     0
-#define SOUND_LOADED   1
-#define SOUND_PLAYING  2
-#define SOUND_STOPPED  3
-
-typedef unsigned short USHORT;
-typedef unsigned short WORD;
-typedef unsigned char  UCHAR;
-typedef unsigned char  BYTE;
-
-const int MAX_SOUNDS      = 100;// max number of sounds in system at once 
-const int MAX_POLY_PER_FX = 5;  // max maara samaa ääntä yhtäaikaisesti
-
-/* PROTOTYPES --------------------------------------------------------------------------------*/
-
-int PisteSound_Alusta(HWND &main_window_handle, HINSTANCE &hinstance_app, 
-					  UCHAR kanavia, DWORD samplerate, UCHAR bitrate);
-
-LPDIRECTSOUND PisteSound_Get_DirectSound();
-
-int PisteSound_Lopeta(void);
-
-int PisteSound_Aanet_Paalla(bool play);
-
-int PisteSound_SFX_Soita(int sfx_index);
-
-int PisteSound_SFX_Soita(int sfx_index, int volume); /* volume: 0 - 100 */
-
-int PisteSound_SFX_Soita(int sfx_index, int volume, int pan, int freq); 
-/* pan: -10 000 - 10 000 | freq: 100 -> 100 000 (Hz)  */
-
-int PisteSound_SFX_Tuhoa(int sfx_index);
-
-int PisteSound_SFX_Uusi(char *filename);
-
-char *PisteSound_Virheilmoitus();
+int PisteSound_StartMusic(char* filename);
+void PisteSound_SetMusicVolume(int volume);
+void PisteSound_StopMusic();
 
 #endif

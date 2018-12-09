@@ -1,43 +1,37 @@
+// Pekka Kana 2 by Janne Kivilahti from Piste Gamez (2003-2007)
+// https://pistegamez.net/game_pk2.html
+//
+// The public release, rewritten and continued by Carlos Donizete Froes
+// is governed by a BSD-2-clause license.
+//
+
+/* INCLUDES -----------------------------------------------------------------*/
+
+#include "PisteDraw.h"
+
+/* DEFINITIONS --------------------------------------------------------------*/
+
 #ifndef P_FONT
 #define P_FONT
 
-#include "D:\Visual Studio\MyProjects\PisteEngine\PisteDraw.h"
-#include "D:\Visual Studio\MyProjects\PisteLanguage\PisteLanguage.h"
+/*---------------------------------------------------------------------------*/
 
-class PisteFont
-{
+class PisteFont2{
 private:
-	int font_table[256];
-	int	font_korkeus, font_leveys, font_lkm;
-	PisteLanguage *tiedosto;
+	int charList[256];
+	int char_w, char_h, char_count;
+	int ImageIndex;
+	int InitCharList();
+	int GetImage(int x,int y,int img_source);
 
 public:
-	UCHAR *font_bitmap;
-	int font_buffer;
+	int Write_Text(int posx, int posy, const char *text);
+	int Write_TextTrasparent(int posx, int posy, const char* text, int alpha);
+	int LoadFile(const char* file_path, const char* file);
 
-	int Init_fonts(void);
-	int Init_fonts_tiedosto(void);
-	int Get_bitmap(int buffer_x, int buffer_y, int ruudun_leveys,UCHAR *buffer);
-	
-	int Piirra_merkkijono(char *merkkijono, int font_x, int font_y, int kohde_buffer);
-
-	int Piirra_merkkijono(int font_x, int font_y, int lPitch, char *merkkijono, 
-		UCHAR *back_buffer, bool loop);
-	int Piirra_merkkijono_led(int font_x, int font_y, int lPitch, char *merkkijono, 
-		UCHAR *back_buffer);
-	int Piirra_merkkijono_lapinakyva(int font_x, int font_y, int lPitch, RECT klipperi, char *merkkijono,
-		UCHAR *back_buffer, bool loop, int pros);
-	int Piirra_merkkijono_varillinen(int font_x, int font_y, int lPitch, char *merkkijono,
-		UCHAR *back_buffer, bool loop, UCHAR color2);
-	int Korkeus(void){return font_korkeus;};
-
-	int LataaTiedostosta(char *polku, char *file);
-
-	PisteFont(int korkeus, int leveys, int lkm);
-	PisteFont();
-	~PisteFont();
-
-
+	PisteFont2(int img_source, int x, int y, int width, int height, int count);
+	PisteFont2();
+	~PisteFont2();
 };
 
 #endif

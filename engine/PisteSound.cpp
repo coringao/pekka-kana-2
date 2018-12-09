@@ -1,240 +1,171 @@
-/* 
-PisteEngine - PisteSound 0.1	
-09.12.2001	Janne Kivilahti / Piste Gamez
-*/
+// Pekka Kana 2 by Janne Kivilahti from Piste Gamez (2003-2007)
+// https://pistegamez.net/game_pk2.html
+//
+// The public release, rewritten and continued by Carlos Donizete Froes
+// is governed by a BSD-2-clause license.
+//
 
-/* INCLUDES ----------------------------------------------------------------------------------*/
+/* DEFINITIONS --------------------------------------------------------------*/
+
+#define AUDIO_FREQ 44100
+
+/* INCLUDES -----------------------------------------------------------------*/
+
+#include <cstdio>
+#include <cstring>
 
 #include "PisteSound.h"
-#include "PisteSFX.h"
-#include "PisteLog.h"
+#include "PisteUtils.h"
+#include "PistePlatform.h"
+#include "PisteTypes.h"
 
-/* DEFINES -----------------------------------------------------------------------------------*/
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_mixer.h>
 
+/*---------------------------------------------------------------------------*/
 
-/* TYPE DEFINITIONS --------------------------------------------------------------------------*/
+const int MAX_SOUNDS = 300;
 
-typedef unsigned short USHORT;
-typedef unsigned short WORD;
-typedef unsigned char  UCHAR;
-typedef unsigned char  BYTE;
+int def_freq = 22050;
+int mus_volume = 100;
+int sfx_volume = 100;
 
-/* VARIABLES ---------------------------------------------------------------------------------*/
+Mix_Chunk* indexes[MAX_SOUNDS]; //The original chunks loaded
+Uint8* freq_chunks[MIX_CHANNELS]; //The chunk allocated for each channel
 
-const int				MAX_SFX	= 500;
+Mix_Music* music = NULL;
+char playingMusic[_MAX_PATH] = "";
 
-UCHAR					PS_kanavia;				// 1 = mono, 2 = stereo
-DWORD					PS_samplerate;			
-UCHAR					PS_bitrate;				// 8 tai 16
+//Change the chunk frequency
+int Change_Frequency(int index, int freq){
+	int channel;
+	SDL_AudioCVT cvt;
 
-HWND					PS_main_window_handle	= NULL; // globally track main window
-HINSTANCE				PS_hinstance_app		= NULL; // globally track hinstance
+	SDL_BuildAudioCVT(&cvt, MIX_DEFAULT_FORMAT, 2, freq, MIX_DEFAULT_FORMAT, 2, def_freq);
+	if (cvt.needed) {
+		for(channel=0; channel<MIX_CHANNELS; channel++) //Find a free channel
+			if(!Mix_Playing(channel)) break;
 
-LPDIRECTSOUND			PS_lpds;
-LPDIRECTSOUNDBUFFER		PS_lpdsbuffer;
-DSBUFFERDESC			PS_dsbd;						// direct soundin bufferin kuvaus
-WAVEFORMATEX			PS_pcmwf;
+		if(channel == MIX_CHANNELS) return -1;
 
-PisteSFX				*soundit[MAX_SFX];
+		cvt.len = indexes[index]->alen;
+		cvt.buf = (Uint8*)SDL_malloc(cvt.len * cvt.len_mult);
+		if (cvt.buf == NULL) return -1;
 
-char					PS_virhe[100];
-
-bool					PS_unload = true;
-
-/* PROTOTYPES --------------------------------------------------------------------------------*/
-
-/* METHODS -----------------------------------------------------------------------------------*/
-
-int PisteSound_Alusta(HWND &main_window_handle, HINSTANCE &hinstance_app, 
-					  UCHAR kanavia, DWORD samplerate, UCHAR bitrate)
-{
-	if (PS_unload) {
-	
-		PS_main_window_handle	= (HWND &)main_window_handle;
-		PS_hinstance_app		= (HINSTANCE &)hinstance_app;	
-
-		strcpy(PS_virhe,"unknown error with sound system.");
-
-		if (FAILED(DirectSoundCreate(NULL, &PS_lpds, NULL)))
-		{
-			strcpy(PS_virhe,"could not create direct sound surface.");
-			PisteLog_Kirjoita("[Error] Piste Sound: Could not create direct sound surface!\n");
-			return PS_VIRHE;
+		SDL_memcpy(cvt.buf, indexes[index]->abuf, indexes[index]->alen);
+		if(SDL_ConvertAudio(&cvt) < 0){
+			SDL_free(cvt.buf);
+			return -1;
 		}
 
-		if (FAILED(PS_lpds->SetCooperativeLevel(PS_main_window_handle, DSSCL_NORMAL)))
-		{
-			strcpy(PS_virhe,"sound system could not cooperate with windows.");
-			PisteLog_Kirjoita("[Error] Piste Sound: Could not cooperate with Windows!\n");
-			return PS_VIRHE;
-		}
+		indexes[index]->abuf = cvt.buf;
+		indexes[index]->alen = cvt.len_cvt;
 
-		PS_kanavia		= kanavia;
-		PS_samplerate	= samplerate;
-		PS_bitrate		= bitrate;
+		if(freq_chunks[channel] != NULL) SDL_free(freq_chunks[channel]);
+		freq_chunks[channel] = cvt.buf;
 
-		for (int i=0;i<MAX_SFX;i++)
-			if (soundit[i])
-				delete soundit[i];
-
-		PS_unload = false;
+		return channel;
 	}
-
-	return 0;
+	else return -1;
 }
 
-int PisteSound_SFX_Uusi(char *filename)
-{
-	int i=0, virhe;
-	bool loytyi = false;
-
-	PisteLog_Kirjoita("- Piste Sound: Loading sound file: ");
-	PisteLog_Kirjoita(filename);
-	PisteLog_Kirjoita("\n");
-
-	/* Etsitään löytyikö jo samasta tiedostosta ladattu ääni */
-		
-	for (i=0;i<MAX_SFX;i++)
-		if (soundit[i] != NULL)
-			if (strcmp(filename,soundit[i]->tiedosto)==0 && strcmp(soundit[i]->tiedosto," ")!=0)
-				return i;
-	
-	i = 0;
-
-	while (i<MAX_SFX && !loytyi)
-	{
-		if (soundit[i] == NULL)
-		{
-			soundit[i] = new PisteSFX(PS_kanavia, PS_samplerate, PS_bitrate);
-
-			if ((virhe = soundit[i]->Lataa(	filename,
-											DSBCAPS_CTRLVOLUME | DSBCAPS_CTRLPAN | DSBCAPS_CTRLFREQUENCY,
-											PS_lpds,
-											PS_pcmwf,
-											PS_dsbd))>0)
-			{
-				strcpy(PS_virhe,"could not load file ");
-				strcat(PS_virhe,filename);
-				if (virhe == 1)
-					strcat(PS_virhe,": \n target buffer is not empty.");
-				if (virhe == 2)
-					strcat(PS_virhe,": \n no file / wrong type / locked.");
-				if (virhe == 3)
-					strcat(PS_virhe,": \n duplicate buffers failed.");
-
-				PisteLog_Kirjoita("[Error] Piste Sound: ");
-				PisteLog_Kirjoita(PS_virhe);
-				PisteLog_Kirjoita("\n");
-				return PS_VIRHE;
-			}
-			
-			loytyi = true;
+int PisteSound_LoadSFX(char* filename){
+	int i = -1;
+	for(i=0;i<MAX_SOUNDS;i++)
+		if (indexes[i] == NULL){
+			indexes[i] = Mix_LoadWAV(filename);
+			break;
 		}
-		i++;
-	}
-
-	if (!loytyi)
-	{
-		strcpy(PS_virhe,"can't load more sounds.");
-		PisteLog_Kirjoita("[Error] Piste Sound: Maximum limit of sounds exceeded!\n");
-		return PS_VIRHE;
-	}
-
-	return i-1;
-}
-
-int PisteSound_Aanet_Paalla(bool play)
-{
-	PisteSFX_Set_Sfx(play);
-	return 0;
-}
-
-int PisteSound_SFX_Tuhoa(int sfx_index)
-{
-	int i=0;
-	bool loytyi = false;
-
-
-	if (sfx_index > -1 && sfx_index < MAX_SFX)
-		if (soundit[sfx_index] != NULL)
-		{
-			soundit[sfx_index]->Tuhoa();
-			soundit[sfx_index] = NULL;
-		}
-
 	return i;
 }
+void PisteSound_PlaySFX(int index){
+	PisteSound_PlaySFX(index, sfx_volume, 0, def_freq);
+}
+void PisteSound_PlaySFX(int index, int volume, int panoramic, int freq){
+	//panoramic -10000 -> 10000
 
-int PisteSound_SFX_Soita(int sfx_index)
-{
-	if (soundit[sfx_index] != NULL)
-		if (soundit[sfx_index]->Soita()!=0)
-		{
-			strcpy(PS_virhe,"error playing a sound");
-			return PS_VIRHE;	
-		}
+	if(index == -1) return;
+	if(indexes[index] == NULL) return;
 
+	volume = volume * 128 / 100;
+	indexes[index]->volume = volume;
+
+	BYTE pan_left = 255;
+	BYTE pan_right = 255;
+
+	//Save a backup of the parameter that will be ovewrited
+	Uint8* bkp_buf = indexes[index]->abuf;
+	Uint32 bkp_len = indexes[index]->alen;
+
+	int channel = Change_Frequency(index, freq);
+	Mix_SetPanning(channel, pan_left, pan_right);
+	Mix_PlayChannel(channel, indexes[index], 0);
+
+	indexes[index]->abuf = bkp_buf;
+	indexes[index]->alen = bkp_len;
+}
+void PisteSound_SetSFXVolume(int volume){
+	sfx_volume = volume;
+}
+int PisteSound_FreeSFX(int index){
+	if(indexes[index] != NULL)
+		Mix_FreeChunk(indexes[index]);
+	indexes[index] = NULL;
 	return 0;
 }
-
-int PisteSound_SFX_Soita(int sfx_index, int volume)
-{
-	if (soundit[sfx_index] != NULL)
-		if (soundit[sfx_index]->Soita(volume)!=0)
-		{
-			strcpy(PS_virhe,"error playing a sound");
-			PisteLog_Kirjoita("[Error] Piste Sound: Error playing a sound!\n");
-			return PS_VIRHE;	
-		}
-
-	return 0;
+void PisteSound_ResetSFX(){
+	int i;
+	for(i=0;i<MAX_SOUNDS;i++)
+		PisteSound_FreeSFX(i);
 }
 
-int PisteSound_SFX_Soita(int sfx_index, int volume, int pan, int freq)
-{
-	if (soundit[sfx_index] != NULL)
-		if (soundit[sfx_index]->Soita(volume, pan, freq)!=0)
-		{
-			strcpy(PS_virhe,"error playing a sound");
-			PisteLog_Kirjoita("[Error] Piste Sound: Error playing a sound!\n");
-			return PS_VIRHE;	
-		}
+int PisteSound_StartMusic(char* filename){
+	PisteUtils_RemoveSpace(filename);
+	if(!strcmp(playingMusic,filename)) return 0;
 
-	return 0;
-}
-
-int PisteSound_Lopeta(void)
-{
-	if (!PS_unload) {
-	
-		for (int i=0;i<MAX_SFX;i++)
-			if (soundit[i] != NULL)
-			{
-				delete soundit[i];
-				soundit[i] = NULL;
-			}
-		
-		if (PS_lpdsbuffer)
-		{
-			PS_lpdsbuffer->Release();
-		}
-
-		if (PS_lpds)
-		{
-			PS_lpds->Release();
-		}
-
-		PS_unload = true;
+	music = Mix_LoadMUS(filename);
+	if (music == NULL){
+		printf("PS     - Music load error: %s\n",Mix_GetError());
+		return -1;
 	}
+	if (Mix_PlayMusic( music, -1) == -1){
+		printf("PS     - Music play error: %s\n",Mix_GetError());
+		return -1;
+	}
+
+	printf("PS     - Loaded %s\n",filename);
+	strcpy(playingMusic,filename);
 	return 0;
 }
-
-LPDIRECTSOUND PisteSound_Get_DirectSound()
-{
-	return PS_lpds;
+void PisteSound_SetMusicVolume(int volume){
+	Mix_VolumeMusic(volume * 128 / 100);
+	mus_volume = volume;
+}
+void PisteSound_StopMusic(){
+	Mix_FadeOutMusic(0);
 }
 
-char *PisteSound_Virheilmoitus()
-{
-	return PS_virhe;
+int PisteSound_Start(){
+	if( Mix_OpenAudio(AUDIO_FREQ, MIX_DEFAULT_FORMAT, 2, 4096) < 0){
+		printf("PS     - Unable to init Mixer: %s\n", Mix_GetError());
+		return -1;
+	}
+
+	Mix_Init(MIX_INIT_MOD || MIX_INIT_MP3 || MIX_INIT_OGG);
+	return 0;
+}
+int PisteSound_Update(){
+	for(int i=0;i<MIX_CHANNELS;i++)
+		if(!Mix_Playing(i) && freq_chunks[i] != NULL){
+				SDL_free(freq_chunks[i]);
+				freq_chunks[i] = NULL;
+		}
+		return 0;
+}
+int PisteSound_End(){
+	PisteSound_ResetSFX();
+	if(music != NULL) Mix_FreeMusic(music);
+	music = NULL;
+	Mix_CloseAudio();
+	return 0;
 }
