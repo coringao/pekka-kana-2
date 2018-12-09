@@ -9,8 +9,8 @@
 # "make clean" - Removes all objects, executables and dependencies
 
 CPP = g++
-CFLAGS += -Wno-write-strings -g -O2 -std=gnu++17
-LFLAGS += -lSDL2 -lSDL2_image -lSDL2_mixer
+CFLAGS += $(shell pkg-config --cflags sdl2) -g -O2 -std=gnu++17 -Wno-write-strings
+LFLAGS += $(shell pkg-config --libs sdl2) -lSDL2_mixer
 
 #Defines directories
 ENGINE_DIR = engine/
@@ -66,13 +66,14 @@ build/%.o : src/%.cpp
 	@$(CPP) -MM -MT $@ -I$(SRC_DIR) -I$(ENGINE_DIR) $< > build/$*.d
 ###########################
 
+makedirs:
+	@mkdir -p $(BIN_DIR) >/dev/null
+	@mkdir -p $(BUILD_DIR) >/dev/null
+	@mkdir -p $(CONFIG_DIR) >/dev/null
+
 clean:
 	@rm -rf $(BIN_DIR)
 	@rm -rf $(BUILD_DIR)
 	@rm -rf $(CONFIG_DIR)
-
-makedirs:
-	@mkdir -p $(BIN_DIR) >/dev/null
-	@mkdir -p $(BUILD_DIR) >/dev/null
 
 .PHONY: pk2 clean makedirs
