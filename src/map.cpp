@@ -403,7 +403,8 @@ int PK2Kartta::Tallenna(char *filename){
 			protoja++;
 
 	//itoa(protoja,luku,10);
-	sprintf(luku, "%i", protoja);
+	char buf [13];
+	sprintf(buf, luku, "%i\n", protoja);
 	tiedosto->write(luku, sizeof(luku));
 	memset(luku, 0, sizeof(luku));
 
