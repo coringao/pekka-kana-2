@@ -3,3 +3,8 @@
   * Added icon in format (PNG) size 330 pixels
   * Added the BSD-2-Clauses license file
   * Functions Removed: Level Editor, Sprite Creator
+  * Created the basic game manpage and desktop files
+  * Changed and fixed the sprite and map files
+  * Main code changed to interact with the engine
+  * Fixed file paths, deleted some commented lines
+  * Fixed bugs and removed unused files
