@@ -14,7 +14,7 @@
 #include <cstring>
 #include "sprite.h"
 #include "PisteDraw.h"
-#include "platform.h"
+#include "PistePlatform.h"
 
 /*---------------------------------------------------------------------------*/
 
