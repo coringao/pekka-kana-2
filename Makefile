@@ -17,7 +17,7 @@ ENGINE_DIR = engine/
 SRC_DIR = src/
 BIN_DIR = bin/
 BUILD_DIR = build/
-CONFIG_DIR = data/config
+CONFIG_DIR = config/
 
 #Defines the engine and pk2 src used in main codes
 ENGINE_SRC = $(wildcard $(ENGINE_DIR)*.cpp)
@@ -69,7 +69,6 @@ build/%.o : src/%.cpp
 makedirs:
 	@mkdir -p $(BIN_DIR) >/dev/null
 	@mkdir -p $(BUILD_DIR) >/dev/null
-	@mkdir -p $(CONFIG_DIR) >/dev/null
 
 clean:
 	@rm -rf $(BIN_DIR)
