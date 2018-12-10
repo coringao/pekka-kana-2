@@ -5174,7 +5174,7 @@ int PK_Alusta_Tilat(){
 				}
 
 				//PisteLog_Kirjoita("  - Loading top scores \n");
-				char topscoretiedosto[_MAX_PATH] = "config/scores.dat";
+				char topscoretiedosto[_MAX_PATH] = "scores.dat";
 				PK_Episodipisteet_Lataa(topscoretiedosto);
 			}
 
@@ -5338,7 +5338,7 @@ int PK_Alusta_Tilat(){
 			esinepisteet = 0,
 			pelastuspisteet = 0;
 
-			char pisteet_tiedosto[_MAX_PATH] = "config/scores.dat";
+			char pisteet_tiedosto[_MAX_PATH] = "scores.dat";
 			int vertailun_tulos;
 
 			vertailun_tulos = PK_Episodipisteet_Vertaa(jakso_indeksi_nyt,temp_pisteet,kartta->aika-aika,false);
