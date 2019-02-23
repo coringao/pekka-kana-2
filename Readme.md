@@ -14,7 +14,7 @@ chicken friends from an evil crow.
 > Ported to SDL by **Samuli Tuomola** (2010)
 > https://github.com/stt/pk2
 > 
-> Translated and ported to SDL2 by **Danilo Lemos** (2016/2018)
+> Translated and ported to SDL2 by **Danilo Lemos** (2016/2019)
 > https://github.com/danilolc/pk2
 
 **Game Design**
@@ -37,7 +37,7 @@ To compile **Pekka Kana 2** into Debian GNU/Linux based distributions,
 you need the **SDL2**, **SDL2_image** and **SDL2_mixer** libraries installed on
 the system. To get them just run the following command on the terminal:
 
-    # apt install libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev make
+    # apt install g++ libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev make
 
 Run the "**make**" command inside the "**Pekka Kana 2**" directory.
 
@@ -60,5 +60,5 @@ To make the removal, within the compiled directory, execute this command:
 
 * Copyright (c) 2003 **Janne Kivilahti**
 * Copyright (c) 2010 **Samuli Tuomola**
-* Copyright (c) 2016-2018 **Danilo Lemos**
-* Copyright (c) 2018 Individual work by Carlos Donizete Froes [a.k.a coringao]
+* Copyright (c) 2016-2019 **Danilo Lemos**
+* Copyright (c) 2018-2019 Individual work by **Carlos Donizete Froes**
