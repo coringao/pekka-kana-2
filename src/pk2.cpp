@@ -8,7 +8,7 @@
 /* DEFINITIONS --------------------------------------------------------------*/
 
 #define GAME_NAME   "Pekka Kana 2"
-#define PK2_VERSION "1.2.1"
+#define PK2_VERSION "1.2.2"
 
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 480
@@ -7278,9 +7278,9 @@ int PK_Piirra_Intro(){
 		PK_Piirra_Intro_Teksti("Ported to SDL by", fontti1, 120, 290, tekijat_alku+70, tekijat_loppu+70);
 		PK_Piirra_Intro_Teksti("Samuli Tuomola (2010)", fontti1, 120, 310, tekijat_alku+80, tekijat_loppu+80);
 		PK_Piirra_Intro_Teksti("Translated and ported to SDL2 and Bug Fixes by", fontti1, 120, 335, tekijat_alku + 90, tekijat_loppu + 90);
-		PK_Piirra_Intro_Teksti("Danilo Lemos (2016-2018)", fontti1, 120, 355, tekijat_alku + 100, tekijat_loppu + 100);
+		PK_Piirra_Intro_Teksti("Danilo Lemos (2016-2019)", fontti1, 120, 355, tekijat_alku + 100, tekijat_loppu + 100);
 		PK_Piirra_Intro_Teksti("Individual work by", fontti1, 120, 375, tekijat_alku + 120, tekijat_loppu + 120);
-		PK_Piirra_Intro_Teksti("Carlos Donizete Froes [a.k.a coringao (2018)", fontti1, 120, 395, tekijat_alku + 130, tekijat_loppu + 130);
+		PK_Piirra_Intro_Teksti("Carlos Donizete Froes [a.k.a coringao (2018-2019)", fontti1, 120, 395, tekijat_alku + 130, tekijat_loppu + 130);
 	}
 
 	if (introlaskuri > testaajat_alku) {
