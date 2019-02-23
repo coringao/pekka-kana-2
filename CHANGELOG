@@ -10,3 +10,5 @@
   * Fixed bugs and removed unused files
   * Defined the SDL2 library in CFLAGS and LDFLAGS
   * Fixed: Sprintf Buffer Overflow Detection
+  * Updated copyright years (2019)
+  * Makefile: Updated configuration directory definition
