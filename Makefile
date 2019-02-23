@@ -12,14 +12,14 @@ CPP = g++
 CFLAGS += $(shell pkg-config --cflags sdl2) -g -O2 -std=gnu++17 -Wno-write-strings
 LFLAGS += $(shell pkg-config --libs sdl2) -lSDL2_mixer
 
-#Defines directories
-ENGINE_DIR = engine/
-SRC_DIR = src/
-BIN_DIR = bin/
-BUILD_DIR = build/
-CONFIG_DIR = config/
+# Defines directories
+ENGINE_DIR = engine
+SRC_DIR = src
+BIN_DIR = bin
+BUILD_DIR = build
+CONFIG_DIR = data/config
 
-#Defines the engine and pk2 src used in main codes
+# Defines the engine and pk2 src used in main codes
 ENGINE_SRC = $(wildcard $(ENGINE_DIR)*.cpp)
 
 ENGINE_OBJ := $(basename $(ENGINE_SRC))
@@ -36,7 +36,7 @@ PK2_MAP_OBJ = $(BUILD_DIR)map.o
 PK2_SRC = $(SRC_DIR)pk2.cpp
 PK2_OBJ = $(BUILD_DIR)pk2.o
 
-#Defines the destination of each binary file
+# Defines the destination of each binary file
 PK2_BIN = $(BIN_DIR)/pk2
 
 DEPENDENCIES := $(PK2_OBJ) $(PK2_SPRITE_OBJ) $(PK2_MAP_OBJ) $(ENGINE_OBJ)
@@ -45,14 +45,12 @@ DEPENDENCIES := $(addsuffix .d, $(DEPENDENCIES))
 
 pk2: makedirs $(PK2_BIN)
 
-###########################
-#Rules for generate the binaries using the object files
+# Rules for generate the binaries using the object files
 $(PK2_BIN): $(PK2_OBJ) $(PK2_SPRITE_OBJ) $(PK2_MAP_OBJ) $(ENGINE_OBJ)
 	@echo -Linking PK2
 	@$(CPP) $^ $(LFLAGS) -o $@
 
-###########################
-#Rules for generate any *.o file
+# Rules for generate any *.o file
 -include $(DEPENDENCIES)
 
 build/%.o : engine/%.cpp
@@ -64,7 +62,6 @@ build/%.o : src/%.cpp
 	@echo -Some dependence of $@ was changed, updating
 	@$(CPP) $(CFLAGS) -I$(SRC_DIR) -I$(ENGINE_DIR) -o $@ -c $<
 	@$(CPP) -MM -MT $@ -I$(SRC_DIR) -I$(ENGINE_DIR) $< > build/$*.d
-###########################
 
 makedirs:
 	@mkdir -p $(BIN_DIR) >/dev/null
