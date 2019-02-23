@@ -13,10 +13,10 @@ CFLAGS += $(shell pkg-config --cflags sdl2) -g -O2 -std=gnu++17 -Wno-write-strin
 LFLAGS += $(shell pkg-config --libs sdl2) -lSDL2_mixer
 
 # Defines directories
-ENGINE_DIR = engine
-SRC_DIR = src
-BIN_DIR = bin
-BUILD_DIR = build
+ENGINE_DIR = engine/
+SRC_DIR = src/
+BIN_DIR = bin/
+BUILD_DIR = build/
 CONFIG_DIR = data/config
 
 # Defines the engine and pk2 src used in main codes
