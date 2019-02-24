@@ -1,15 +1,14 @@
 // Pekka Kana 2 by Janne Kivilahti from Piste Gamez (2003-2007)
 // https://pistegamez.net/game_pk2.html
 //
-// The public release, rewritten and continued by Carlos Donizete Froes
-// is governed by a BSD-2-clause license.
+// This public release and rewritten is governed by a BSD-2-clause license.
 //
 
 /* INCLUDES -----------------------------------------------------------------*/
 
 #include <cstdio>
-#include "PisteInput.h"
-#include "PisteDraw.h"
+#include "input.h"
+#include "draw.h"
 
 #ifdef _WIN32
 #include <Windows.h>
