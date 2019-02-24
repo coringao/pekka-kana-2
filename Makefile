@@ -4,7 +4,7 @@
 # This public release and rewritten is governed by a BSD-2-clause license.
 #
 # Makefile command:
-# "make" - Creates PK2 binary
+# "make" - Creates Pekka Kana 2 binary
 # "make clean" - Removes all objects, executables and dependencies
 
 CPP = g++
@@ -17,7 +17,7 @@ BIN_DIR = bin/
 BUILD_DIR = build/
 CONFIG_DIR = data/config
 
-# Defines the engine and pk2 src used in main codes
+# Defines the engine and src used in main codes
 ENGINE_SRC  = $(wildcard $(SRC_DIR)*.cpp)
 ENGINE_OBJ := $(basename $(ENGINE_SRC))
 ENGINE_OBJ := $(notdir $(ENGINE_OBJ))
@@ -34,7 +34,7 @@ PK2_SRC = $(SRC_DIR)pk2.cpp
 PK2_OBJ = $(BUILD_DIR)pk2.o
 
 # Defines the destination of each binary file
-PK2_BIN = $(BIN_DIR)/pk2
+PK2_BIN = $(BIN_DIR)/pekka-kana-2
 
 DEPENDENCIES := $(PK2_OBJ) $(PK2_SPRITE_OBJ) $(PK2_MAP_OBJ) $(ENGINE_OBJ)
 DEPENDENCIES := $(basename $(DEPENDENCIES))
@@ -44,7 +44,7 @@ pk2: makedirs $(PK2_BIN)
 
 # Rules for generate the binaries using the object files
 $(PK2_BIN): $(PK2_OBJ) $(PK2_SPRITE_OBJ) $(PK2_MAP_OBJ) $(ENGINE_OBJ)
-	@echo -Linking PK2
+	@echo -Linking Pekka Kana 2
 	@$(CPP) $^ $(LFLAGS) -o $@
 
 # Rules for generate any *.o file

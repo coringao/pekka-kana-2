@@ -45,7 +45,7 @@ Run the "**make**" command inside the "**Pekka Kana 2**" directory.
 
 The PK2 binary will be in "**bin/**" directory.
 
-    $ ./bin/pk2
+    $ ./bin/pekka-kana-2
 
 To make the removal, within the compiled directory, execute this command:
 
