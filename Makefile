@@ -15,7 +15,6 @@ LFLAGS += $(shell pkg-config --libs sdl2) -lSDL2_mixer
 SRC_DIR = src/
 BIN_DIR = bin/
 BUILD_DIR = build/
-CONFIG_DIR = data/config
 
 # Defines the engine and src used in main codes
 ENGINE_SRC  = $(wildcard $(SRC_DIR)*.cpp)
@@ -62,6 +61,5 @@ makedirs:
 clean:
 	@rm -rf $(BIN_DIR)
 	@rm -rf $(BUILD_DIR)
-	@rm -rf $(CONFIG_DIR)
 
 .PHONY: pk2 clean makedirs
