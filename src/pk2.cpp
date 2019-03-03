@@ -7988,14 +7988,14 @@ int main(int argc, char *argv[]){
 	}
 
 	if (Piste_Init(RUUDUN_LEVEYS, RUUDUN_KORKEUS, GAME_NAME) < 0) {
-		printf("PK2    - Failed to init PisteEngine.\n");
+		printf("PK2 - Failed to init PisteEngine.\n");
 		return 0;
 	}
 	//Piste_SetFPS(60);
 
 	//Game works in ../data
 	chdir("../data");
-	chdir("/usr/share/games/pk2/data");
+	chdir("/usr/share/games/pekka-kana-2/data");
 	strcpy(tyohakemisto,".");
 
 	PK_Asetukset_Lataa("$HOME/.pekka-kana-2/config/settings.ini");
