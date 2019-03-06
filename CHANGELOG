@@ -1,9 +1,9 @@
 **Changelog version: 1.2.2**
   * Renamed the engine source file and moved to the 'src' directory
-  * Makefile: Changed build in engine file
+  * Makefile: changed build in engine file
   * Renamed from pk2 to pekka-kana-2
-  * Saves.dat/Scores.dat: Path changed to home directory
-  * Debian packaging: Data directory name changed to 'pekka-kana-2' 
+  * Fixed path to home directory
+  * Debian packaging: data directory name changed to 'pekka-kana-2' 
 
 **Changelog version: 1.2.1**
   * Initial source code release copied http://pistegamez.net/PK2
