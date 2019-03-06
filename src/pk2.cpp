@@ -642,8 +642,8 @@ void PK_Asetukset_Alusta(){
 	settings.isFit = true;
 	settings.isFullScreen = true;
 
-	PisteUtils_CreateDir("$HOME/.pekka-kana-2/config");
-	PK_Asetukset_Tallenna("$HOME/.pekka-kana-2/config/settings.ini");
+	PisteUtils_CreateDir("config");
+	PK_Asetukset_Tallenna("config/settings.ini");
 }
 //PK_Settings_Open
 int PK_Asetukset_Lataa(char *filename){
@@ -1246,7 +1246,7 @@ int PK_Tallennukset_Tallenna(int i){
 	for (int j = 0;j < EPISODI_MAX_JAKSOJA;j++)
 		tallennukset[i].jakso_lapaisty[j] = jaksot[j].lapaisty;
 
-	PK_Tallennukset_Tallenna_Kaikki("$HOME/.pekka-kana-2/config/saves.dat");
+	PK_Tallennukset_Tallenna_Kaikki("config/saves.dat");
 
 	return 0;
 }
@@ -5134,7 +5134,7 @@ int PK_Alusta_Tilat(){
 			PK_Tallennukset_Tyhjenna();
 
 			//PisteLog_Kirjoita("  - Loading saves \n");
-			PK_Tallennukset_Hae_Kaikki("$HOME/.pekka-kana-2/config/saves.dat");
+			PK_Tallennukset_Hae_Kaikki("config/saves.dat");
 
 			//PisteLog_Kirjoita("  - PisteSound sounds on \n");
 			//PisteSound_Aanet_Paalla(settings.aanet);
@@ -5174,7 +5174,7 @@ int PK_Alusta_Tilat(){
 				}
 
 				//PisteLog_Kirjoita("  - Loading top scores \n");
-				char topscoretiedosto[_MAX_PATH] = "$HOME/.pekka-kana-2/scores.dat";
+				char topscoretiedosto[_MAX_PATH] = "scores.dat";
 				PK_Episodipisteet_Lataa(topscoretiedosto);
 			}
 
@@ -7999,7 +7999,7 @@ int main(int argc, char *argv[]){
 	chdir("/usr/share/games/pekka-kana-2/data");
 	strcpy(tyohakemisto,".");
 
-	PK_Asetukset_Lataa("$HOME/.pekka-kana-2/config/settings.ini");
+	PK_Asetukset_Lataa("config/settings.ini");
 
 	tekstit = new PisteLanguage();
 
@@ -8027,7 +8027,7 @@ int main(int argc, char *argv[]){
 	if(PK2_virhe)
 		printf("PK2 - Error!\n");
 
-	PK_Asetukset_Tallenna("$HOME/.pekka-kana-2/config/settings.ini");
+	PK_Asetukset_Tallenna("config/settings.ini");
 
 	PK_Unload();
 	Piste_Quit();
