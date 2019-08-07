@@ -7,9 +7,9 @@
 # "make" - Creates Pekka Kana 2 binary
 # "make clean" - Removes all objects, executables and dependencies
 
-CPP = g++
-CFLAGS += $(shell pkg-config --cflags sdl2) -g -O2 -std=gnu++17 -Wno-write-strings
-LFLAGS += $(shell pkg-config --libs sdl2) -lSDL2_mixer
+CXX = g++
+CXXFLAGS += $(shell pkg-config --cflags sdl2) -g -O2 -std=gnu++17 -Wno-write-strings
+LDFLAGS += $(shell pkg-config --libs sdl2) -lSDL2_mixer
 
 # Defines directories
 SRC_DIR = src/
@@ -44,15 +44,15 @@ pk2: makedirs $(PK2_BIN)
 # Rules for generate the binaries using the object files
 $(PK2_BIN): $(PK2_OBJ) $(PK2_SPRITE_OBJ) $(PK2_MAP_OBJ) $(ENGINE_OBJ)
 	@echo -Linking Pekka Kana 2
-	@$(CPP) $^ $(LFLAGS) -o $@
+	@$(CXX) $^ $(LDFLAGS) -o $@
 
 # Rules for generate any *.o file
 -include $(DEPENDENCIES)
 
 build/%.o : src/%.cpp
 	@echo -Some dependence of $@ was changed, updating
-	@$(CPP) $(CFLAGS) -I$(SRC_DIR) -o $@ -c $<
-	@$(CPP) -MM -MT $@ -I$(SRC_DIR) $< > build/$*.d
+	@$(CXX) $(CXXFLAGS) -I$(SRC_DIR) -o $@ -c $<
+	@$(CXX) -MM -MT $@ -I$(SRC_DIR) $< > build/$*.d
 
 makedirs:
 	@mkdir -p $(BIN_DIR) >/dev/null
