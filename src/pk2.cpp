@@ -7023,7 +7023,7 @@ int PK_Piirra_Kartta(){
 	int nuppi_x = 0, nuppi_y = 0;
 	int tyyppi = 0;
 	int paluu;
-	int min = 0, sek = 0;
+	int time = 0, min = 0, sek = 0;
 	int ikoni;
 	int sinx = 0, cosy = 0;
 	int pekkaframe = 0;
@@ -7095,13 +7095,20 @@ int PK_Piirra_Kartta(){
 					PisteDraw2_Font_Write(fontti1,luku,info_x+vali,info_y+75);
 				}
 
-				if (episodipisteet.ajat[i] > 0) {
+				if (episodipisteet.ajat[i] > 0) { //TODO - not the best way, best time can alse be equal to zero
 					PisteDraw2_Font_WriteAlpha(fontti1,tekstit->Hae_Teksti(txt_map_level_fastest_player),info_x,info_y+98,75);
 					PisteDraw2_Font_Write(fontti1,episodipisteet.nopeimmat_pelaajat[i],info_x,info_y+110);
 
 					vali = 8 + PisteDraw2_Font_WriteAlpha(fontti1,tekstit->Hae_Teksti(txt_map_level_best_time),info_x,info_y+122,75);
-					min = episodipisteet.ajat[i]/60;
-					sek = episodipisteet.ajat[i]%60;
+					
+					time = (int)episodipisteet.ajat[i];
+					if (time < 0) {
+						time = -time;
+						vali += PisteDraw2_Font_Write(fontti1,"-",info_x+vali,info_y+122);
+					}
+
+					min = (int)time/60;
+					sek = (int)time%60;
 
 					itoa(min,luku,10);
 					vali += PisteDraw2_Font_Write(fontti1,luku,info_x+vali,info_y+122);
