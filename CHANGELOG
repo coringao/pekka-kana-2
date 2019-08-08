@@ -1,3 +1,8 @@
+**Changelog version: 1.2.3**
+  * Renamed non-default CPP variable to CXX
+  * Fix saves and settings path
+  * Try to fix negative times on records
+
 **Changelog version: 1.2.2**
   * Renamed the engine source file and moved to the 'src' directory
   * Makefile: changed build in engine file
