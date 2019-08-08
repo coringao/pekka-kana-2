@@ -8,7 +8,7 @@
 /* DEFINITIONS --------------------------------------------------------------*/
 
 #define GAME_NAME   "Pekka Kana 2"
-#define PK2_VERSION "1.2.2"
+#define PK2_VERSION "1.2"
 
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 480
@@ -220,7 +220,7 @@ struct PK2SETTINGS {
 	bool musiikki;
 	bool aanet;
 
-	//Version 1.1
+	//Version 1.2
 	bool isFullScreen;
 	bool isFiltered;
 	bool isFit;
