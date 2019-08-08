@@ -248,6 +248,8 @@ bool running = true;
 bool unload = false;
 bool taulut_laskettu = false;
 
+char DATA_PATH[_MAX_PATH] = "";
+
 //ASETUKSET
 PK2SETTINGS settings;
 
@@ -597,7 +599,7 @@ int txt_setup_options,
 
 //#### Prototypes
 
-int PK_Asetukset_Tallenna(char *filename);
+int PK_Settings_Save();
 int PK_Kartta_Aseta_Spritet();
 void PK_Esineet_Alusta();
 void PK_Lisaa_Episodin_Hakemisto(char *tiedosto);
@@ -642,11 +644,16 @@ void PK_Asetukset_Alusta(){
 	settings.isFit = true;
 	settings.isFullScreen = true;
 
-	PisteUtils_CreateDir("config");
-	PK_Asetukset_Tallenna("config/settings.ini");
+	PisteUtils_CreateDir(DATA_PATH);
+	//PK_Settings_Save("config/settings.ini");
+	PK_Settings_Save();
 }
-//PK_Settings_Open
-int PK_Asetukset_Lataa(char *filename){
+int PK_Settings_Open(){
+
+	char filename[_MAX_PATH] = "";
+	strcat(filename, DATA_PATH);
+	strcat(filename, "settings.ini");
+
 	ifstream *tiedosto = new ifstream(filename, ios::binary);
 	char versio[4];
 
@@ -680,8 +687,7 @@ int PK_Asetukset_Lataa(char *filename){
 
 	return 0;
 }
-//PK_Settings_Save
-int PK_Asetukset_Tallenna(char *filename){
+int PK_Settings_Save(){
 	settings.ruudun_korkeus	= RUUDUN_KORKEUS;
 	settings.ruudun_leveys		= RUUDUN_LEVEYS;
 
@@ -693,6 +699,10 @@ int PK_Asetukset_Tallenna(char *filename){
 	settings.kontrolli_hyokkays1		= kontrolli_hyokkays1;
 	settings.kontrolli_hyokkays2		= kontrolli_hyokkays2;
 	settings.kontrolli_kayta_esine		= kontrolli_kayta_esine;
+
+	char filename[_MAX_PATH] = "";
+	strcat(filename, DATA_PATH);
+	strcat(filename, "settings.ini");
 
 	ofstream *tiedosto = new ofstream(filename, ios::binary);
 	tiedosto->write ("1.1", 4);
@@ -1167,10 +1177,14 @@ int PK_Tallennukset_Tyhjenna(){
 	return 0;
 }
 //PK_Records_Search
-int PK_Tallennukset_Hae_Kaikki(char *filename){
+int PK_Records_Search(){
 	char versio[2];
 	char lkmc[8];
 	int lkm, i;
+
+	char filename[_MAX_PATH] = "";
+	strcat(filename, DATA_PATH);
+	strcat(filename, "saves.dat");
 
 	ifstream *tiedosto = new ifstream(filename, ios::binary);
 
@@ -1196,12 +1210,15 @@ int PK_Tallennukset_Hae_Kaikki(char *filename){
 
 	return 0;
 }
-//PK_Records_SaveAll
-int PK_Tallennukset_Tallenna_Kaikki(char *filename){
+int PK_Records_SaveAll(){
 	char versio[2] = "1";
 	char lkm[8];
 
 	itoa(MAX_TALLENNUKSIA,lkm,10);
+
+	char filename[_MAX_PATH] = "";
+	strcat(filename, DATA_PATH);
+	strcat(filename, "saves.dat");
 
 	ofstream *tiedosto = new ofstream(filename, ios::binary);
 	tiedosto->write(versio,	sizeof(versio));
@@ -1246,7 +1263,8 @@ int PK_Tallennukset_Tallenna(int i){
 	for (int j = 0;j < EPISODI_MAX_JAKSOJA;j++)
 		tallennukset[i].jakso_lapaisty[j] = jaksot[j].lapaisty;
 
-	PK_Tallennukset_Tallenna_Kaikki("config/saves.dat");
+	//PK_Records_SaveAll("config/saves.dat");
+	PK_Records_SaveAll();
 
 	return 0;
 }
@@ -5134,7 +5152,8 @@ int PK_Alusta_Tilat(){
 			PK_Tallennukset_Tyhjenna();
 
 			//PisteLog_Kirjoita("  - Loading saves \n");
-			PK_Tallennukset_Hae_Kaikki("config/saves.dat");
+			//PK_Records_Search("config/saves.dat");
+			PK_Records_Search();
 
 			//PisteLog_Kirjoita("  - PisteSound sounds on \n");
 			//PisteSound_Aanet_Paalla(settings.aanet);
@@ -7004,7 +7023,7 @@ int PK_Piirra_Kartta(){
 	int nuppi_x = 0, nuppi_y = 0;
 	int tyyppi = 0;
 	int paluu;
-	int min = 0, sek = 0;
+	int time = 0, min = 0, sek = 0;
 	int ikoni;
 	int sinx = 0, cosy = 0;
 	int pekkaframe = 0;
@@ -7076,13 +7095,20 @@ int PK_Piirra_Kartta(){
 					PisteDraw2_Font_Write(fontti1,luku,info_x+vali,info_y+75);
 				}
 
-				if (episodipisteet.ajat[i] > 0) {
+				if (episodipisteet.ajat[i] > 0) { //TODO - not the best way, best time can alse be equal to zero
 					PisteDraw2_Font_WriteAlpha(fontti1,tekstit->Hae_Teksti(txt_map_level_fastest_player),info_x,info_y+98,75);
 					PisteDraw2_Font_Write(fontti1,episodipisteet.nopeimmat_pelaajat[i],info_x,info_y+110);
 
 					vali = 8 + PisteDraw2_Font_WriteAlpha(fontti1,tekstit->Hae_Teksti(txt_map_level_best_time),info_x,info_y+122,75);
-					min = episodipisteet.ajat[i]/60;
-					sek = episodipisteet.ajat[i]%60;
+					
+					time = (int)episodipisteet.ajat[i];
+					if (time < 0) {
+						time = -time;
+						vali += PisteDraw2_Font_Write(fontti1,"-",info_x+vali,info_y+122);
+					}
+
+					min = (int)time/60;
+					sek = (int)time%60;
 
 					itoa(min,luku,10);
 					vali += PisteDraw2_Font_Write(fontti1,luku,info_x+vali,info_y+122);
@@ -7999,7 +8025,11 @@ int main(int argc, char *argv[]){
 	chdir("/usr/share/games/pekka-kana-2/data");
 	strcpy(tyohakemisto,".");
 
-	PK_Asetukset_Lataa("config/settings.ini");
+	strcpy(DATA_PATH, getenv("HOME"));
+	strcat(DATA_PATH, "/.pekka-kana-2/");
+	 
+	//PK_Settings_Open("config/settings.ini");
+	PK_Settings_Open();
 
 	tekstit = new PisteLanguage();
 
@@ -8027,7 +8057,8 @@ int main(int argc, char *argv[]){
 	if(PK2_virhe)
 		printf("PK2 - Error!\n");
 
-	PK_Asetukset_Tallenna("config/settings.ini");
+	//PK_Settings_Save("config/settings.ini");
+	PK_Settings_Save();
 
 	PK_Unload();
 	Piste_Quit();

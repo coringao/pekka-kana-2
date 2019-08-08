@@ -111,8 +111,8 @@ int PisteUtils_Scandir(const char* type, char* dir, char (*list)[_MAX_PATH], int
 
 	return i;
 }
-int PisteUtils_CreateDir(char *directory){
-	CreateDirectory("$HOME/.pekka-kana-2", NULL);
+int PisteUtils_CreateDir(const char *directory){
+	CreateDirectory(directory, NULL);
 	return 0;
 }
 
@@ -143,10 +143,10 @@ int PisteUtils_Scandir(const char* type, char* dir, char (*list)[_MAX_PATH], int
 
 	return files;
 }
-int PisteUtils_CreateDir(char *directory){
+int PisteUtils_CreateDir(const char *directory){
 	char shell[_MAX_PATH];
 	strcpy(shell,"mkdir -p ");
-	strcat(shell,"$HOME/.pekka-kana-2");
+	strcat(shell, directory);
 	system(shell);
 	return 0;
 }
