@@ -19,6 +19,6 @@
 void    PisteUtils_Lower(char* string);
 void    PisteUtils_RemoveSpace(char* string);
 char    *PisteUtils_FindImage(char *filename);
-int     PisteUtils_CreateDir(char *directory);
+int     PisteUtils_CreateDir(const char *directory);
 int     PisteUtils_Scandir(const char* type, char* dir, char (*list)[_MAX_PATH], int length);
 #endif
