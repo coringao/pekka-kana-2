@@ -1,5 +1,6 @@
 **Changelog version: 1.2.3**
   * Renamed non-default CPP variable to CXX
+  * Encountered a misspelling on manpage
   * Fix saves and settings path
   * Try to fix negative times on records
 
