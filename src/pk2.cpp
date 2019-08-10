@@ -751,11 +751,15 @@ int PK_Episodipisteet_Vertaa(int jakso, DWORD episteet, DWORD aika, bool loppupi
 	}
 	return paluu;
 }
-//PK_EpisodeScore_Open
-int PK_Episodipisteet_Lataa(char *filename){
-	PK_Lisaa_Episodin_Hakemisto(filename);
-
-	ifstream *tiedosto = new ifstream(filename, ios::binary);
+int PK_EpisodeScore_Open(char *filename){
+	
+	char buffer[_MAX_PATH];
+	strcpy(buffer, DATA_PATH);
+	strcat(buffer, episodi);
+	strcat(buffer, "/");
+	strcat(buffer, filename);
+	
+	ifstream *tiedosto = new ifstream(buffer, ios::binary);
 	char versio[4];
 
 	if (tiedosto->fail()){
@@ -774,11 +778,18 @@ int PK_Episodipisteet_Lataa(char *filename){
 
 	return 0;
 }
-//PK_EpisodeScore_Save
-int PK_Episodipisteet_Tallenna(char *filename){
-	PK_Lisaa_Episodin_Hakemisto(filename);
+int PK_EpisodeScore_Save(char *filename){
+	
+	char buffer[_MAX_PATH];
+	strcpy(buffer, DATA_PATH);
+	strcat(buffer, episodi);
+	strcat(buffer, "/");
 
-	ofstream *tiedosto = new ofstream(filename, ios::binary);
+	PisteUtils_CreateDir(buffer);
+
+	strcat(buffer, filename);
+
+	ofstream *tiedosto = new ofstream(buffer, ios::binary);
 	tiedosto->write ("1.0", 4);
 	tiedosto->write ((char *)&episodipisteet, sizeof (episodipisteet));
 	delete (tiedosto);
@@ -5194,7 +5205,7 @@ int PK_Alusta_Tilat(){
 
 				//PisteLog_Kirjoita("  - Loading top scores \n");
 				char topscoretiedosto[_MAX_PATH] = "scores.dat";
-				PK_Episodipisteet_Lataa(topscoretiedosto);
+				PK_EpisodeScore_Open(topscoretiedosto);
 			}
 
 			/* Ladataan kartan taustakuva ...*/
@@ -5362,12 +5373,12 @@ int PK_Alusta_Tilat(){
 
 			vertailun_tulos = PK_Episodipisteet_Vertaa(jakso_indeksi_nyt,temp_pisteet,kartta->aika-aika,false);
 			if (vertailun_tulos > 0) {
-				PK_Episodipisteet_Tallenna(pisteet_tiedosto);
+				PK_EpisodeScore_Save(pisteet_tiedosto);
 			}
 
 			vertailun_tulos = PK_Episodipisteet_Vertaa(0,pisteet,0,true);
 			if (vertailun_tulos > 0)
-				PK_Episodipisteet_Tallenna(pisteet_tiedosto);
+				PK_EpisodeScore_Save(pisteet_tiedosto);
 
 			musiikin_voimakkuus = musiikin_max_voimakkuus;
 
