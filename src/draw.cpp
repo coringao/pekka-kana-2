@@ -387,6 +387,7 @@ void PisteDraw2_AdjustScreen(){
 }
 void PisteDraw2_FitScreen(bool fit){
 	ScreenFit = fit;
+	PisteDraw2_AdjustScreen();
 }
 
 void PisteDraw2_GetWindowPosition(int* x, int* y) {
