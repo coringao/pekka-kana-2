@@ -1,3 +1,8 @@
+**Changelog version: 1.2.4**
+  * Save scores on DATA_PATH 
+  * Update Screen_dest rect when fit screen
+  * Add Rooster Island 2 map
+
 **Changelog version: 1.2.3**
   * Renamed non-default CPP variable to CXX
   * Encountered a misspelling on manpage
